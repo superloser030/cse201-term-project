@@ -16,7 +16,9 @@ class Session {
 public:
     Session(ATM& atm, System& system, UserCard& card, const Messages& msg);
 
-    // 거래 메뉴 반복. ATMException을 catch하면 오류 출력 후 종료 (REQ9.1)
+    // 거래 메뉴 반복
+    //   ATMException   → msg.get(e.id())로 오류 출력 후 종료 (REQ8.2, REQ9.1)
+    //   CancelException → "취소" 안내 후 정상 종료 (결정 13)
     // 끝나면 성공 거래가 있을 때만 요약 출력 (REQ2.3)
     void run();
 

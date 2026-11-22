@@ -1,14 +1,33 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
+#include "Messages.h"
 #include <stdexcept>
 #include <string>
 
-// ── session 중 예외 (REQ9.1) ─────────────────────────────────────────────
-// Session::run()에서 catch → 오류 메시지 출력 → session 종료
+// ════════════════════════════════════════════════════════════════════════
+// 예외를 받는 위치 (crash 방지 규칙)
+//   Session::run()        : 거래 중 ATMException, CancelException
+//   ATM::startSession()   : session 전 단계(언어·카드·인증)의 ATMException, CancelException
+//   System::run()         : 그 밖의 std::exception (마지막 방어선, ATM 선택 화면으로 복귀)
+//                           InputClosedException → 프로그램 정상 종료
+//   main()                : FileFormatException → 오류 출력 후 종료
+// ════════════════════════════════════════════════════════════════════════
+
+// ── session 중 오류 (REQ9.1) ─────────────────────────────────────────────
+// 문구 대신 MsgId를 담음 → 받는 쪽이 선택된 언어로 출력 (REQ8.2)
+// detail: 문구에 덧붙일 숫자 (잔액, 한도 등). 없으면 -1
 class ATMException : public std::runtime_error {
 public:
-    explicit ATMException(const std::string& msg) : std::runtime_error(msg) {}
+    explicit ATMException(MsgId id, long long detail = -1)
+        : std::runtime_error("ATMException"), id_(id), detail_(detail) {}
+
+    MsgId id() const { return id_; }
+    long long detail() const { return detail_; }
+
+private:
+    MsgId id_;
+    long long detail_;
 };
 
 class InvalidCardException : public ATMException {         // REQ3.1~3.2, 결정 2
@@ -46,8 +65,22 @@ public:
     using ATMException::ATMException;
 };
 
+// ── 취소 (결정 13) ───────────────────────────────────────────────────────
+// 오류가 아닌 정상 종료. ConsoleIO가 'c' 입력 시 throw
+class CancelException : public std::exception {
+public:
+    const char* what() const noexcept override { return "Cancelled"; }
+};
+
+// ── 입력 끝(EOF) ─────────────────────────────────────────────────────────
+// 더 읽을 입력이 없음 → System::run()에서 받아 프로그램 정상 종료 (무한 루프 방지)
+class InputClosedException : public std::runtime_error {
+public:
+    InputClosedException() : std::runtime_error("Input closed") {}
+};
+
 // ── 입력 파일 오류 (결정 7) ──────────────────────────────────────────────
-// session 예외와 별개. System::load()에서 throw → main에서 오류 출력 후 프로그램 종료
+// 언어 선택 전(프로그램 시작 시) 발생 → 영어 문자열 그대로
 class FileFormatException : public std::runtime_error {
 public:
     explicit FileFormatException(const std::string& msg) : std::runtime_error(msg) {}

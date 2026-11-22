@@ -7,9 +7,16 @@
 class Session;
 class Messages;
 class Account;
+class ATM;
 
 // 거래 1건. 실행(execute)과 기록(describe)을 함께 가짐 (command pattern)
-// execute() 성공 후에만 계좌/ATM/session 기록에 남김 (REQ7.2: 성공 거래만)
+//
+// 규칙
+//   - 수수료: 각 class의 static requiredFee()가 유일한 계산 위치 (FeePolicy 표 사용)
+//             Session은 안내용으로, 생성자는 fee_ 설정용으로 같은 함수를 호출
+//   - execute(): ① 모든 검사를 먼저 끝내고 ② 그 다음에 계좌·ATM 상태를 변경
+//                → 실패(throw)해도 상태가 일부만 바뀌는 일이 없음
+//   - 성공 시 assignId() → ID 발급 (REQ2.4, 성공 거래만 기록 REQ7.2)
 class Transaction {
 public:
     virtual ~Transaction() = default;
@@ -23,24 +30,28 @@ public:
     long long fee() const { return fee_; }
 
 protected:
-    Transaction(const std::string& cardNumber, long long amount);
-    void assignId();                                               // execute 성공 시 호출 → 성공 거래만 ID 소비
-
-    int id_ = 0;
-    std::string cardNumber_;
-    long long amount_;
-    long long fee_ = 0;
+    Transaction(const std::string& cardNumber, long long amount, long long fee);
+    void assignId();                                               // execute 성공 시 호출
 
 private:
     static int nextId_;
+    int id_ = 0;
+    std::string cardNumber_;
+    long long amount_;
+    long long fee_;
 };
 
 // ── 입금 (REQ4) ─────────────────────────────────────────────────────────
 // 공통: 입금 계좌, 수수료 지폐(현금으로 별도 투입, REQ4.4)
 class DepositTransaction : public Transaction {
+public:
+    static long long requiredFee(const ATM& atm, const Account& target);    // 0 / 2,000
 protected:
-    DepositTransaction(const std::string& cardNumber, Account& target, long long amount,
-                       const CashBundle& feeBills);
+    DepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
+                       long long amount, const CashBundle& feeBills);
+    Account& target() const { return *target_; }
+    const CashBundle& feeBills() const { return feeBills_; }
+private:
     Account* target_;
     CashBundle feeBills_;
 };
@@ -48,7 +59,7 @@ protected:
 // 현금 입금: 입금 지폐 + 수수료 지폐 합쳐서 50장 이하 (결정 10), ATM 현금 증가 (REQ4.5)
 class CashDepositTransaction : public DepositTransaction {
 public:
-    CashDepositTransaction(const std::string& cardNumber, Account& target,
+    CashDepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
                            const CashBundle& bills, const CashBundle& feeBills);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
@@ -59,7 +70,7 @@ private:
 // 수표 입금: 100,000원 이상, 1장 (REQ1.10), ATM 현금 증가 없음 (REQ4.6, 수수료 지폐만 증가)
 class CheckDepositTransaction : public DepositTransaction {
 public:
-    CheckDepositTransaction(const std::string& cardNumber, Account& target,
+    CheckDepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
                             long long checkAmount, const CashBundle& feeBills);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
@@ -68,7 +79,10 @@ public:
 // ── 출금 (REQ5) ─────────────────────────────────────────────────────────
 class WithdrawalTransaction : public Transaction {
 public:
-    WithdrawalTransaction(const std::string& cardNumber, Account& source, long long amount);
+    static long long requiredFee(const ATM& atm, const Account& source);    // 2,000 / 3,000
+
+    WithdrawalTransaction(const std::string& cardNumber, const ATM& atm, Account& source,
+                          long long amount);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
     const CashBundle& dispensed() const { return dispensed_; }
@@ -80,7 +94,9 @@ private:
 // ── 현금 이체 (REQ6) ────────────────────────────────────────────────────
 class CashTransferTransaction : public Transaction {
 public:
-    // inserted: 이체 금액 + 수수료를 한꺼번에 넣은 현금. amount = 총액 - 수수료
+    static long long requiredFee();                                          // 1,000
+
+    // inserted: 이체 금액 + 수수료를 한꺼번에 넣은 현금. amount = 총액 - 수수료 (REQ6.3)
     CashTransferTransaction(const std::string& cardNumber, Account& dest, const CashBundle& inserted);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
@@ -92,8 +108,11 @@ private:
 // ── 계좌 이체 (REQ6) ────────────────────────────────────────────────────
 class AccountTransferTransaction : public Transaction {
 public:
-    AccountTransferTransaction(const std::string& cardNumber, Account& source, Account& dest,
-                               long long amount);
+    static long long requiredFee(const ATM& atm, const Account& source,
+                                 const Account& dest);                       // 2,000 / 3,000 / 5,000
+
+    AccountTransferTransaction(const std::string& cardNumber, const ATM& atm, Account& source,
+                               Account& dest, long long amount);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
 private:

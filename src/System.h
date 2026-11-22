@@ -22,7 +22,10 @@ public:
     // 파일 읽기 + 검사. 문제 있으면 FileFormatException (결정 7)
     void load(const std::string& filename);
 
-    void run();                                            // ATM 선택 → atm.startSession()
+    // ATM 선택 → atm.startSession() 반복
+    // 마지막 방어선: 그 밖의 std::exception은 오류 출력 후 ATM 선택으로 복귀
+    //               InputClosedException은 프로그램 정상 종료
+    void run();
     void printSnapshot(std::ostream& out) const;          // REQ10.1
 
     Bank* findBank(const std::string& name) const;
