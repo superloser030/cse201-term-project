@@ -2,15 +2,12 @@
 #define ATM_H
 
 #include "CashBundle.h"
-#include "TransactionLog.h"
-#include <memory>
 #include <string>
 
 class Bank;
 class UserCard;
 class System;
 class Messages;
-class Transaction;
 
 // ATM 1대 (REQ1.1~1.3). session 진행의 주체
 // Single/Multi 차이는 일반 카드 수락 규칙(acceptsBank)뿐 (REQ1.2)
@@ -28,22 +25,24 @@ public:
     void startSession(System& system);
 
     virtual bool acceptsBank(const Bank& bank) const = 0;                     // 일반 카드 발급 은행 수락 여부
-    bool isPrimary(const Bank& bank) const { return &bank == primaryBank_; }   // 수수료, 관리자 카드 판단
+    bool isPrimary(const Bank& bank) const { return &bank == primaryBank_; }   // 수수료 판단
 
     const std::string& serial() const { return serial_; }
     Bank& primaryBank() const { return *primaryBank_; }
     bool isBilingual() const { return bilingual_; }
-    virtual std::string typeName() const = 0;       // "Single" / "Multi" (snapshot 출력용)
+    virtual std::string typeName() const = 0;       // "Single" / "Multi"
+
+    // ── 한도: ATM이 허용하는 값 (REQ4.2 "the limit allowed by the ATM", 임시 결정 5·6) ──
+    static constexpr int DEFAULT_MAX_BILLS = 50;    // 화면 요구사항: 한 번에 넣거나 내줄 수 있는 지폐 50장
+    static constexpr int DEFAULT_MAX_CHECKS = 1;    // 4번 설명의 예시 값
+    int maxBillsPerTransaction() const { return maxBills_; }
+    int maxChecksPerTransaction() const { return maxChecks_; }
 
     // ── 현금: 용도별 함수로만 변경 (encapsulation) ────────────
-    const CashBundle& cash() const { return cash_; }                     // 읽기 전용 (snapshot)
-    void acceptCash(const CashBundle& bills);                           // 투입 현금 보관 (REQ4.5, 6.6)
-    bool planDispense(long long amount, CashBundle& out) const;         // 내줄 지폐 계산만 (REQ5.1, 결정 8)
-    void dispenseCash(const CashBundle& bills);                         // 실제 배출 (REQ5.5). 부족하면 InsufficientCashException
-
-    // ── 거래 기록 ─────────────────────────────────────────────
-    const TransactionLog& log() const { return log_; }                  // 읽기 전용 (관리자 출력)
-    void record(std::shared_ptr<const Transaction> tx);                 // 성공 거래 추가 (결정 1)
+    const CashBundle& cash() const { return cash_; }                           // 읽기 전용 (snapshot)
+    void acceptCash(const CashBundle& bills);                                 // 투입 현금 보관 (REQ4.5, 6.6)
+    DispenseResult planDispense(long long amount, CashBundle& out) const;     // 내줄 지폐 계산만 (REQ5.1, 결정 8)
+    void dispenseCash(const CashBundle& bills);                               // 실제 배출 (REQ5.5)
 
 protected:
     ATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash);
@@ -57,7 +56,8 @@ private:
     Bank* primaryBank_;
     bool bilingual_;
     CashBundle cash_;
-    TransactionLog log_;
+    int maxBills_ = DEFAULT_MAX_BILLS;
+    int maxChecks_ = DEFAULT_MAX_CHECKS;
 };
 
 class SingleBankATM : public ATM {

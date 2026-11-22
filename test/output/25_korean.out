@@ -1,0 +1,49 @@
+Initial condition file name (Enter = sample_initial_condition.txt): test/data/rich_condition.txt
+Loaded 3 bank(s), 4 account(s), 3 ATM(s) from test/data/rich_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)  ADMIN-Shinhan (Shinhan)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 2
+
+===== ATM 000222 (IM, Multi, Bilingual) =====
+Select language / 언어 선택: 1) English  2) 한국어
+Select: 2
+(취소하려면 언제든 'c'를 입력하세요)
+카드를 넣어 주세요 (카드 번호 입력): 2222-2222-2222
+비밀번호를 입력하세요: 4321
+
+1) 입금  2) 출금  3) 이체  4) 거래 종료
+선택: 1
+1) 현금  2) 수표
+선택: 1
+현금을 넣어 주세요: 권종별 장수를 입력하세요.
+  50,000원권 장수: 0
+  10,000원권 장수: 0
+  5,000원권 장수: 0
+  1,000원권 장수: 5
+거래가 완료되었습니다. (거래 번호: 1)
+현재 잔액: 1,005,000원
+
+1) 입금  2) 출금  3) 이체  4) 거래 종료
+선택: 2
+출금할 금액(원): 1500
+[오류] 금액은 1,000원 단위여야 합니다.
+
+===== 거래 요약 =====
+계좌: IM 200-200-222222 (Andor)
+[거래 1] ATM 000222 | 카드 2222-2222-2222 | 현금 입금 | 금액 5,000원 | 수수료 0원 | 입금 계좌 200-200-222222
+카드가 반환되었습니다. 감사합니다.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 0
+Program terminated.

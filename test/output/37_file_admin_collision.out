@@ -1,0 +1,3 @@
+Initial condition file name (Enter = sample_initial_condition.txt): test/data/admin_collision.txt
+[Error] Invalid initial condition file: Duplicate card number: ADMIN-Kakao
+Program terminated.

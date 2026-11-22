@@ -1,0 +1,26 @@
+Initial condition file name (Enter = sample_initial_condition.txt): 
+Loaded 2 bank(s), 2 account(s), 2 ATM(s) from sample_initial_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 2
+
+===== ATM 000222 (IM, Multi, Bilingual) =====
+Select language / 언어 선택: 1) English  2) 한국어
+Select: 2
+(취소하려면 언제든 'c'를 입력하세요)
+카드를 넣어 주세요 (카드 번호 입력): 9999-9999-9999
+[오류] 유효하지 않은 카드입니다.
+카드가 반환되었습니다. 감사합니다.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 0
+Program terminated.

@@ -1,0 +1,61 @@
+Initial condition file name (Enter = sample_initial_condition.txt): test/data/rich_condition.txt
+Loaded 3 bank(s), 4 account(s), 3 ATM(s) from test/data/rich_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)  ADMIN-Shinhan (Shinhan)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 1
+
+===== ATM 000111 (Kakao, Single, Unilingual) =====
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): 1111-1111-1111
+Enter password: 1234
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 3
+1) Cash transfer  2) Account transfer
+Select: 1
+Destination account number: 200-200-222222
+Insert the cash to transfer, including the fee of 1,000 KRW.
+  Number of 50,000 KRW bills: 0
+  Number of 10,000 KRW bills: 1
+  Number of 5,000 KRW bills: 0
+  Number of 1,000 KRW bills: 1
+Amount to be transferred (fee excluded): 10,000 KRW.  1) OK  2) Cancel
+Select: 1
+Transaction completed. (Transaction ID: 1)
+Current balance: 1,000,000 KRW
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 4
+
+===== Session Summary =====
+Account: Kakao 100-100-111111 (Chris)
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Cash Transfer | Amount 10,000 KRW | Fee 1,000 KRW | To 200-200-222222
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: /
+
+===== Snapshot =====
+[ATMs]
+  ATM 000111 (Kakao, Single): 50,000x20 10,000x51 5,000x20 1,000x101 | Total 1,711,000 KRW
+  ATM 000222 (IM, Multi): 50,000x0 10,000x0 5,000x0 1,000x60 | Total 60,000 KRW
+  ATM 000333 (Shinhan, Multi): 50,000x10 10,000x10 5,000x10 1,000x10 | Total 660,000 KRW
+[Accounts]
+  Kakao 100-100-111111 (Chris): 1,000,000 KRW
+  Kakao 100-100-444444 (Chris): 500 KRW
+  IM 200-200-222222 (Andor): 1,010,000 KRW
+  Shinhan 300-300-333333 (Bora): 1,000,000 KRW
+====================
+(continue input) 0
+Program terminated.

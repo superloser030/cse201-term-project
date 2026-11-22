@@ -1,0 +1,4 @@
+[Admin Menu] 1) Transaction History
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Cash Deposit | Amount 5,000 KRW
+[TX 2] ATM 000222 | Card 2222-2222-2222 | Withdrawal | Amount 5,000 KRW | Fee 2,000 KRW
+Transaction history saved to file: transaction_history.txt

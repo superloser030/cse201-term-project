@@ -1,0 +1,63 @@
+Initial condition file name (Enter = sample_initial_condition.txt): 
+Loaded 2 bank(s), 2 account(s), 2 ATM(s) from sample_initial_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: /
+
+===== Snapshot =====
+[ATMs]
+  ATM 000111 (Kakao, Single): 50,000x2 10,000x3 5,000x1 1,000x3 | Total 138,000 KRW
+  ATM 000222 (IM, Multi): 50,000x0 10,000x0 5,000x0 1,000x60 | Total 60,000 KRW
+[Accounts]
+  Kakao 100-100-111111 (Chris): 4,000 KRW
+  IM 200-200-222222 (Andor): 6,000 KRW
+====================
+(continue input) 1
+
+===== ATM 000111 (Kakao, Single, Unilingual) =====
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): 1111-1111-1111
+Enter password: 1234
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 1
+1) Cash  2) Check
+Select: 1
+Insert cash: enter the number of bills for each denomination.
+  Number of 50,000 KRW bills: 0
+  Number of 10,000 KRW bills: 0
+  Number of 5,000 KRW bills: 0
+  Number of 1,000 KRW bills: 4
+Transaction completed. (Transaction ID: 1)
+Current balance: 8,000 KRW
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 4
+
+===== Session Summary =====
+Account: Kakao 100-100-111111 (Chris)
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Cash Deposit | Amount 4,000 KRW | Fee 0 KRW | To 100-100-111111
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: /
+
+===== Snapshot =====
+[ATMs]
+  ATM 000111 (Kakao, Single): 50,000x2 10,000x3 5,000x1 1,000x7 | Total 142,000 KRW
+  ATM 000222 (IM, Multi): 50,000x0 10,000x0 5,000x0 1,000x60 | Total 60,000 KRW
+[Accounts]
+  Kakao 100-100-111111 (Chris): 8,000 KRW
+  IM 200-200-222222 (Andor): 6,000 KRW
+====================
+(continue input) 0
+Program terminated.

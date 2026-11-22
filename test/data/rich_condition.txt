@@ -1,0 +1,43 @@
+3 4 3
+Kakao
+IM
+Shinhan
+Kakao
+Chris
+100-100-111111
+1000000
+1111-1111-1111
+1234
+IM
+Andor
+200-200-222222
+1000000
+2222-2222-2222
+4321
+Shinhan
+Bora
+300-300-333333
+1000000
+3333-3333-3333
+0007
+Kakao
+Chris
+100-100-444444
+500
+4444-4444-4444
+1111
+Kakao
+000111
+Single
+Unilingual
+20 50 20 100
+IM
+000222
+Multi
+Bilingual
+0 0 0 60
+Shinhan
+000333
+Multi
+Bilingual
+10 10 10 10

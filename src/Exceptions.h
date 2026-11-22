@@ -7,20 +7,21 @@
 
 // ════════════════════════════════════════════════════════════════════════
 // 예외를 받는 위치 (crash 방지 규칙)
-//   Session::run()        : 거래 중 ATMException, CancelException
+//   Session::run()        : 거래 중 ATMException(FeeMismatchException은 따로), CancelException
 //   ATM::startSession()   : session 전 단계(언어·카드·인증)의 ATMException, CancelException
 //   System::run()         : 그 밖의 std::exception (마지막 방어선, ATM 선택 화면으로 복귀)
-//                           InputClosedException → 프로그램 정상 종료
 //   main()                : FileFormatException → 오류 출력 후 종료
+//                           InputClosedException → 정상 종료
 // ════════════════════════════════════════════════════════════════════════
 
 // ── session 중 오류 (REQ9.1) ─────────────────────────────────────────────
 // 문구 대신 MsgId를 담음 → 받는 쪽이 선택된 언어로 출력 (REQ8.2)
-// detail: 문구에 덧붙일 숫자 (잔액, 한도 등). 없으면 -1
+// detail: 문구의 "{}"에 들어갈 숫자 (잔액, 한도 등). 없으면 -1
 class ATMException : public std::runtime_error {
 public:
     explicit ATMException(MsgId id, long long detail = -1)
-        : std::runtime_error("ATMException"), id_(id), detail_(detail) {}
+        : std::runtime_error("ATMException(id=" + std::to_string(static_cast<int>(id)) + ")"),
+          id_(id), detail_(detail) {}
 
     MsgId id() const { return id_; }
     long long detail() const { return detail_; }
@@ -30,12 +31,7 @@ private:
     long long detail_;
 };
 
-class InvalidCardException : public ATMException {         // REQ3.1~3.2, 결정 2
-public:
-    using ATMException::ATMException;
-};
-
-class WrongPasswordException : public ATMException {       // REQ3.5 (3회 연속 실패)
+class InvalidCardException : public ATMException {         // REQ3.1~3.2
 public:
     using ATMException::ATMException;
 };
@@ -45,12 +41,12 @@ public:
     using ATMException::ATMException;
 };
 
-class InsufficientCashException : public ATMException {    // REQ5.2 ATM 현금 부족, 결정 8
+class InsufficientCashException : public ATMException {    // REQ5.2 ATM 현금 부족
 public:
     using ATMException::ATMException;
 };
 
-class LimitExceededException : public ATMException {       // REQ4.2, 5.6, 5.7, 결정 10
+class LimitExceededException : public ATMException {       // REQ4.2, 5.6, 5.7, 결정 8·10
 public:
     using ATMException::ATMException;
 };
@@ -65,6 +61,12 @@ public:
     using ATMException::ATMException;
 };
 
+// 선택된 언어로 오류 문구 만들기: "[Error] ..." / "[오류] ..."
+inline std::string describeError(const Messages& msg, const ATMException& e) {
+    std::string body = e.detail() >= 0 ? msg.format(e.id(), e.detail()) : msg.get(e.id());
+    return msg.get(MsgId::ERROR_PREFIX) + body;
+}
+
 // ── 취소 (결정 13) ───────────────────────────────────────────────────────
 // 오류가 아닌 정상 종료. ConsoleIO가 'c' 입력 시 throw
 class CancelException : public std::exception {
@@ -73,7 +75,7 @@ public:
 };
 
 // ── 입력 끝(EOF) ─────────────────────────────────────────────────────────
-// 더 읽을 입력이 없음 → System::run()에서 받아 프로그램 정상 종료 (무한 루프 방지)
+// 더 읽을 입력이 없음 → main()에서 받아 프로그램 정상 종료 (무한 루프 방지)
 class InputClosedException : public std::runtime_error {
 public:
     InputClosedException() : std::runtime_error("Input closed") {}

@@ -11,3 +11,6 @@ build/
 
 # Runtime output (admin transaction history files)
 *_transac_history.txt
+
+# Admin transaction history output (prototype)
+transaction_history.txt

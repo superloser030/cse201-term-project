@@ -1,0 +1,96 @@
+Initial condition file name (Enter = sample_initial_condition.txt): test/data/rich_condition.txt
+Loaded 3 bank(s), 4 account(s), 3 ATM(s) from test/data/rich_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)  ADMIN-Shinhan (Shinhan)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 1
+
+===== ATM 000111 (Kakao, Single, Unilingual) =====
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): 1111-1111-1111
+Enter password: 1234
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 1
+1) Cash  2) Check
+Select: 1
+Insert cash: enter the number of bills for each denomination.
+  Number of 50,000 KRW bills: 0
+  Number of 10,000 KRW bills: 0
+  Number of 5,000 KRW bills: 0
+  Number of 1,000 KRW bills: 5
+Transaction completed. (Transaction ID: 1)
+Current balance: 1,005,000 KRW
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 4
+
+===== Session Summary =====
+Account: Kakao 100-100-111111 (Chris)
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Cash Deposit | Amount 5,000 KRW | Fee 0 KRW | To 100-100-111111
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 2
+
+===== ATM 000222 (IM, Multi, Bilingual) =====
+Select language / 언어 선택: 1) English  2) 한국어
+Select: 1
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): 2222-2222-2222
+Enter password: 4321
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 2
+Amount to withdraw (KRW): 5000
+Transaction completed. (Transaction ID: 2)
+Current balance: 993,000 KRW
+Dispensed bills: 1,000x5
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 4
+
+===== Session Summary =====
+Account: IM 200-200-222222 (Andor)
+[TX 2] ATM 000222 | Card 2222-2222-2222 | Withdrawal | Amount 5,000 KRW | Fee 2,000 KRW | From 200-200-222222 | Bills 1,000x5
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 3
+
+===== ATM 000333 (Shinhan, Multi, Bilingual) =====
+Select language / 언어 선택: 1) English  2) 한국어
+Select: 1
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): admin-kakao
+[Admin Menu] 1) Transaction History
+Select: 1
+===== Transaction History (all ATMs, since system start) =====
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Cash Deposit | Amount 5,000 KRW | Fee 0 KRW | To 100-100-111111
+[TX 2] ATM 000222 | Card 2222-2222-2222 | Withdrawal | Amount 5,000 KRW | Fee 2,000 KRW | From 200-200-222222 | Bills 1,000x5
+Transaction history saved to file: transaction_history.txt
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+3) 000333  Shinhan  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 0
+Program terminated.

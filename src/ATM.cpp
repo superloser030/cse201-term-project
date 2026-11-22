@@ -1,0 +1,100 @@
+#include "ATM.h"
+#include "Bank.h"
+#include "Card.h"
+#include "ConsoleIO.h"
+#include "Exceptions.h"
+#include "FeePolicy.h"
+#include "Messages.h"
+#include "Session.h"
+#include "System.h"
+
+#include <iostream>
+
+ATM::ATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash)
+    : serial_(serial), primaryBank_(&primaryBank), bilingual_(bilingual), cash_(initialCash) {}
+
+// ── 현금 ────────────────────────────────────────────────────────────────
+void ATM::acceptCash(const CashBundle& bills) { cash_.add(bills); }
+
+DispenseResult ATM::planDispense(long long amount, CashBundle& out) const {
+    return cash_.planDispense(amount, maxBills_, out);
+}
+
+void ATM::dispenseCash(const CashBundle& bills) { cash_.remove(bills); }
+
+// ── session ─────────────────────────────────────────────────────────────
+void ATM::startSession(System& system) {
+    ConsoleIO& io = system.io();
+    const Messages* msg = &Messages::english();          // Unilingual은 영어 고정 (REQ1.3)
+    bool cardInserted = false;
+
+    std::cout << "\n===== ATM " << serial_ << " (" << primaryBank_->name() << ", " << typeName()
+              << ", " << (bilingual_ ? "Bilingual" : "Unilingual") << ") =====\n";
+    try {
+        if (bilingual_) {                                 // 결정 12: 카드 투입 전 언어 선택
+            std::cout << msg->get(MsgId::SELECT_LANGUAGE) << '\n' << msg->get(MsgId::SELECT_PROMPT);
+            if (io.readNumber(1, 2) == 2) msg = &Messages::korean();
+        }
+        std::cout << msg->get(MsgId::CANCEL_HINT) << '\n' << msg->get(MsgId::INSERT_CARD);
+        const std::string cardNumber = io.readToken();
+        cardInserted = true;                              // REQ2.1: 카드 투입 = session 시작
+
+        Card* card = system.findCard(cardNumber);
+        if (card == nullptr || !card->canBeUsedAt(*this))  // REQ3.1
+            throw InvalidCardException(MsgId::ERR_INVALID_CARD);
+
+        if (card->isAdmin()) {
+            runAdminSession(system, *msg);
+        } else {
+            UserCard* user = card->asUserCard();
+            if (user == nullptr) throw InvalidCardException(MsgId::ERR_INVALID_CARD);
+            if (!authenticate(system, *user, *msg)) throw ATMException(MsgId::ERR_PASSWORD_LOCKED);
+            runUserSession(system, *user, *msg);
+        }
+    } catch (const ATMException& e) {
+        std::cout << describeError(*msg, e) << '\n';
+    } catch (const CancelException&) {
+        std::cout << msg->get(MsgId::CANCELLED) << '\n';
+    }
+    if (cardInserted) std::cout << msg->get(MsgId::CARD_RETURNED) << '\n';
+}
+
+bool ATM::authenticate(System& system, UserCard& card, const Messages& msg) {
+    for (int attempt = 1; attempt <= FeePolicy::MAX_PASSWORD_ATTEMPTS; ++attempt) {
+        std::cout << msg.get(MsgId::ENTER_PASSWORD);
+        const std::string password = system.io().readToken();
+        if (card.issuer().verifyPassword(card, password)) return true;     // REQ3.3: 은행이 확인
+        const int left = FeePolicy::MAX_PASSWORD_ATTEMPTS - attempt;
+        if (left > 0)                                                       // REQ3.4
+            std::cout << describeError(msg, ATMException(MsgId::ERR_WRONG_PASSWORD, left)) << '\n';
+    }
+    return false;                                                           // REQ3.5
+}
+
+void ATM::runAdminSession(System& system, const Messages& msg) {
+    std::cout << msg.get(MsgId::ADMIN_MENU) << '\n' << msg.get(MsgId::SELECT_PROMPT);   // REQ7.1
+    system.io().readNumber(1, 1);
+
+    std::cout << msg.get(MsgId::HISTORY_TITLE) << '\n';                    // REQ7.2
+    system.log().print(std::cout, msg);
+    if (system.log().saveToFile(System::HISTORY_FILE, msg))                // REQ7.3
+        std::cout << msg.format(MsgId::HISTORY_SAVED, std::string(System::HISTORY_FILE)) << '\n';
+}
+
+void ATM::runUserSession(System& system, UserCard& card, const Messages& msg) {
+    Session session(*this, system, card, msg);
+    session.run();
+}
+
+// ── Single / Multi ──────────────────────────────────────────────────────
+SingleBankATM::SingleBankATM(const std::string& serial, Bank& primaryBank, bool bilingual,
+                             const CashBundle& initialCash)
+    : ATM(serial, primaryBank, bilingual, initialCash) {}
+
+bool SingleBankATM::acceptsBank(const Bank& bank) const { return isPrimary(bank); }
+
+MultiBankATM::MultiBankATM(const std::string& serial, Bank& primaryBank, bool bilingual,
+                           const CashBundle& initialCash)
+    : ATM(serial, primaryBank, bilingual, initialCash) {}
+
+bool MultiBankATM::acceptsBank(const Bank& /*bank*/) const { return true; }

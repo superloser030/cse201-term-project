@@ -1,0 +1,40 @@
+Initial condition file name (Enter = sample_initial_condition.txt): 
+Loaded 2 bank(s), 2 account(s), 2 ATM(s) from sample_initial_condition.txt
+Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 2
+
+===== ATM 000222 (IM, Multi, Bilingual) =====
+Select language / 언어 선택: 1) English  2) 한국어
+Select: 1
+(Enter 'c' at any prompt to cancel)
+Insert your card (enter card number): 1111-1111-1111
+Enter password: 1234
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 2
+Amount to withdraw (KRW): 1000
+Transaction completed. (Transaction ID: 1)
+Current balance: 0 KRW
+Dispensed bills: 1,000x1
+
+1) Deposit  2) Withdrawal  3) Transfer  4) End session
+Select: 4
+
+===== Session Summary =====
+Account: Kakao 100-100-111111 (Chris)
+[TX 1] ATM 000222 | Card 1111-1111-1111 | Withdrawal | Amount 1,000 KRW | Fee 3,000 KRW | From 100-100-111111 | Bills 1,000x1
+Card returned. Thank you.
+
+===== Select ATM =====
+1) 000111  Kakao  Single  Unilingual
+2) 000222  IM  Multi  Bilingual
+0) Exit program
+(Enter '/' at any prompt to print the snapshot)
+Select: 0
+Program terminated.
