@@ -2,26 +2,39 @@
 #define BANK_H
 
 #include "Account.h"
+#include "Card.h"
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
+// 은행 1개: 계좌와 카드를 소유하고 비밀번호를 확인 (REQ1.5, REQ3.3)
 class Bank {
-private:
-    std::string bankName;
-    std::vector<Account*> accounts;
-
 public:
-    Bank(const std::string& name);
-    ~Bank();
+    explicit Bank(const std::string& name);
 
-    std::string getBankName() const { return bankName; }
-    void addAccount(Account* acc);
-    const std::vector<Account*>& getAccounts() const { return accounts; }
+    Bank(const Bank&) = delete;                 // 소유 객체 중복 해제 방지
+    Bank& operator=(const Bank&) = delete;
 
-    // ATM에서 호출하는 인증 및 조회 메서드 (REQ3)
-    Account* findAccountByCard(const std::string& cardNum) const;
-    Account* findAccountByNumber(const std::string& accNum) const;
-    Account* authenticate(const std::string& cardNum, int password) const;
+    const std::string& name() const { return name_; }
+
+    // ── 파일 로드 시 사용 ─────────────────────────────────────
+    Account& openAccount(const std::string& ownerName, const std::string& accountNumber,
+                         long long balance);
+    UserCard& issueCard(const std::string& cardNumber, Account& account, const std::string& password);
+    AdminCard& issueAdminCard();               // "ADMIN-" + name_ (결정 3)
+
+    // ── 조회 / 인증 ───────────────────────────────────────────
+    Card* findCard(const std::string& cardNumber) const;          // 없으면 nullptr
+    Account* findAccount(const std::string& accountNumber) const; // 없으면 nullptr
+    bool verifyPassword(const UserCard& card, const std::string& password) const;  // REQ3.3
+
+    const std::vector<std::unique_ptr<Account>>& accounts() const { return accounts_; }
+
+private:
+    std::string name_;
+    std::vector<std::unique_ptr<Account>> accounts_;
+    std::map<std::string, std::unique_ptr<Card>> cards_;          // 카드 번호 → 카드
 };
 
 #endif
