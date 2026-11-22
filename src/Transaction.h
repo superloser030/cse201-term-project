@@ -36,19 +36,33 @@ private:
 };
 
 // ── 입금 (REQ4) ─────────────────────────────────────────────────────────
+// 공통: 입금 계좌, 수수료 지폐(현금으로 별도 투입, REQ4.4)
 class DepositTransaction : public Transaction {
+protected:
+    DepositTransaction(const std::string& cardNumber, Account& target, long long amount,
+                       const CashBundle& feeBills);
+    Account* target_;
+    CashBundle feeBills_;
+};
+
+// 현금 입금: 입금 지폐 + 수수료 지폐 합쳐서 50장 이하 (결정 10), ATM 현금 증가 (REQ4.5)
+class CashDepositTransaction : public DepositTransaction {
 public:
-    enum class Kind { CASH, CHECK };
-    // CASH : bills 사용, checkAmount 무시 / CHECK : checkAmount 사용, bills 비어 있음
-    DepositTransaction(const std::string& cardNumber, Account& target, Kind kind,
-                       const CashBundle& bills, long long checkAmount, const CashBundle& feeBills);
+    CashDepositTransaction(const std::string& cardNumber, Account& target,
+                           const CashBundle& bills, const CashBundle& feeBills);
     void execute(Session& session) override;
     std::string describe(const Messages& msg) const override;
 private:
-    Account* target_;
-    Kind kind_;
     CashBundle bills_;
-    CashBundle feeBills_;
+};
+
+// 수표 입금: 100,000원 이상, 1장 (REQ1.10), ATM 현금 증가 없음 (REQ4.6, 수수료 지폐만 증가)
+class CheckDepositTransaction : public DepositTransaction {
+public:
+    CheckDepositTransaction(const std::string& cardNumber, Account& target,
+                            long long checkAmount, const CashBundle& feeBills);
+    void execute(Session& session) override;
+    std::string describe(const Messages& msg) const override;
 };
 
 // ── 출금 (REQ5) ─────────────────────────────────────────────────────────
