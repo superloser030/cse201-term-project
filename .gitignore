@@ -1,0 +1,13 @@
+# Build outputs
+build/
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.idb
+
+# IDE
+.vs/
+
+# Runtime output (admin transaction history files)
+*_transac_history.txt
