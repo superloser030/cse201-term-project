@@ -1,0 +1,5 @@
+1) English  2) 한국어  (c: cancel / 취소)
+Select: c
+Cancelled by user.
+Program terminated.
+!Insert your card

@@ -32,7 +32,7 @@ const Messages& Messages::korean() {
 // ── English ──────────────────────────────────────────────────────────────
 std::string EnglishMessages::get(MsgId id) const {
     switch (id) {
-    case MsgId::SELECT_LANGUAGE:         return "Select language / 언어 선택: 1) English  2) 한국어";
+    case MsgId::SELECT_LANGUAGE:         return "Select language / 언어 선택: 1) English  2) 한국어  (c: cancel / 취소)";
     case MsgId::SELECT_PROMPT:           return "Select: ";
     case MsgId::INSERT_CARD:             return "Insert your card (enter card number): ";
     case MsgId::CANCEL_HINT:             return "(Enter 'c' at any prompt to cancel)";
@@ -101,7 +101,7 @@ std::string EnglishMessages::get(MsgId id) const {
 // ── 한국어 ───────────────────────────────────────────────────────────────
 std::string KoreanMessages::get(MsgId id) const {
     switch (id) {
-    case MsgId::SELECT_LANGUAGE:         return "Select language / 언어 선택: 1) English  2) 한국어";
+    case MsgId::SELECT_LANGUAGE:         return "Select language / 언어 선택: 1) English  2) 한국어  (c: cancel / 취소)";
     case MsgId::SELECT_PROMPT:           return "선택: ";
     case MsgId::INSERT_CARD:             return "카드를 넣어 주세요 (카드 번호 입력): ";
     case MsgId::CANCEL_HINT:             return "(취소하려면 언제든 'c'를 입력하세요)";

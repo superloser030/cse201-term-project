@@ -2,7 +2,7 @@
 
 - branch: `prototype`
 - build: MSVC (VS 2022 Build Tools) `/std:c++17 /EHsc /W4 /permissive- /utf-8` → **오류 0, warning 0**
-- 자동 테스트: `test.cmd` 또는 `bash test/run_tests.sh` → **48개 중 48개 통과** (2026-11-28)
+- 자동 테스트: `test.cmd` 또는 `bash test/run_tests.sh` → **49개 중 49개 통과** (2026-11-28)
 - 메모리 검사: `/fsanitize=address`(AddressSanitizer)로 build해 전체 입력 실행 → **ASan 오류 보고 0건**
   (파일 오류 테스트 33~37은 의도대로 종료 코드 1). 조교 답변 반영 후 47개로 다시 실행해도 0건
 - 실행 기록: `test/auto/<case>/output.txt` (테스트 실행 시 생성)
@@ -62,6 +62,7 @@
 | 46 | admin_other_bank_atm | 결정 2 | 다른 은행 ATM에 관리자 카드 → Invalid card |
 | 47 | admin_only_this_atm | 결정 1 (조교 답변 a) | ATM2의 거래가 ATM1 관리자 화면·파일에 나오지 않음, ATM2 관리자에게는 나옴 |
 | 48 | language_retry | 결정 16 | 언어 선택에서 잘못 입력 → 오류 후 언어 다시 묻기 |
+| 49 | language_cancel | 결정 13·16 | 언어 선택 화면에서 c → 취소, ATM 선택으로 복귀 (안내 문구 표시) |
 
 ## 확인하지 못한 것
 - **실제 console 창의 한국어 표시**: 테스트는 출력을 파일로 받아 UTF-8 문자열을 비교한 것이다.
