@@ -7,7 +7,7 @@ C++ console ATM simulator (Bank / Account / Card / ATM) built with object-orient
 |---|---|
 | Build | `build.cmd` |
 | Run | `run.cmd` (builds first if needed) |
-| Automated tests | `test.cmd` (all 47) / `test.cmd 23` (tests whose name contains "23") |
+| Automated tests | `test.cmd` (all 48) / `test.cmd 23` (tests whose name contains "23") |
 | Manual tests | follow `test/manual/manual_test_guide.md` |
 
 All scripts can be double-clicked or run from cmd / PowerShell in the project root (`.\build.cmd`).

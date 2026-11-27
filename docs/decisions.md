@@ -139,6 +139,12 @@ spec(CSE201 Term Project v1)에 명시되지 않았거나 해석이 갈리는 �
   시스템 설명 "Each ATM is managed by a primary bank" / REQ1.11 ATM 정보의 Initial Fund
 - **근거 종류**: spec 애매(공급 시점 미정) + 설계 결정
 
+## 16. 언어 선택에서 잘못 입력했을 때
+- **결정**: 오류 메시지를 출력하고 **언어를 다시 묻는다**(ATM 선택으로 돌아가지 않음). `c`를 입력하면 취소.
+- **spec**: REQ9.1의 "오류 후 session 종료"는 session 안의 예외에 대한 규칙. 언어 선택은 카드 투입 전(session 시작 전, 결정 12)이라 해당하지 않음.
+- **근거 종류**: spec 없음 + 실제 ATM (잘못 누르면 같은 화면에 머무름)
+- 카드 투입 이후(session 안)의 오류는 그대로 REQ9.1에 따라 session 종료.
+
 ## 확인 필요 (구현 시)
 - **한국어 출력 인코딩**: Windows console 기본 인코딩(CP949)과 소스의 UTF-8(`/utf-8`)이 달라 한글이 깨질 수 있음(확인 안 됨).
   후보 해결책: 시작 시 `SetConsoleOutputCP(65001)` 또는 실행 전 `chcp 65001`. demo 노트북에서 실제로 확인할 것.

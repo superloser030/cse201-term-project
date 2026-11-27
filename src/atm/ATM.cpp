@@ -32,8 +32,15 @@ void ATM::startSession(System& system) {
               << ", " << (bilingual_ ? "Bilingual" : "Unilingual") << ") =====\n";
     try {
         if (bilingual_) {                                 // 결정 12: 카드 투입 전 언어 선택
-            std::cout << msg->get(MsgId::SELECT_LANGUAGE) << '\n' << msg->get(MsgId::SELECT_PROMPT);
-            if (io.readNumber(1, 2) == 2) msg = &Messages::korean();
+            while (true) {                                // session 시작 전이므로 잘못 입력하면 다시 묻기 (결정 16)
+                std::cout << msg->get(MsgId::SELECT_LANGUAGE) << '\n' << msg->get(MsgId::SELECT_PROMPT);
+                try {
+                    if (io.readNumber(1, 2) == 2) msg = &Messages::korean();
+                    break;
+                } catch (const InvalidInputException& e) {
+                    std::cout << describeError(*msg, e) << '\n';
+                }
+            }
         }
         std::cout << msg->get(MsgId::CANCEL_HINT) << '\n' << msg->get(MsgId::INSERT_CARD);
         const std::string cardNumber = io.readToken();
