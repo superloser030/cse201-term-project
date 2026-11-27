@@ -15,7 +15,7 @@ fail=0
 for input in test/cases/*.in; do
     name=$(basename "$input" .in)
     output="test/output/$name.out"
-    rm -f transaction_history.txt
+    rm -f ATM_*_transaction_history.txt
     "$EXE" < "$input" > "$output" 2>&1
     ok=1
     while IFS= read -r line || [ -n "$line" ]; do
@@ -41,7 +41,7 @@ for input in test/cases/*.in; do
         fail=$((fail + 1))
     fi
 done
-rm -f transaction_history.txt
+rm -f ATM_*_transaction_history.txt
 
 echo "----------------------------------------"
 echo "Total: $((pass + fail)), passed: $pass, failed: $fail"

@@ -10,18 +10,20 @@ void TransactionLog::add(std::shared_ptr<const Transaction> tx) {
     entries_.push_back(std::move(tx));
 }
 
-void TransactionLog::print(std::ostream& out, const Messages& msg) const {
-    if (entries_.empty()) {
-        out << msg.get(MsgId::NO_TRANSACTIONS) << '\n';
-        return;
+void TransactionLog::printForAtm(std::ostream& out, const Messages& msg, const std::string& atmSerial) const {
+    out << msg.format(MsgId::HISTORY_TITLE, atmSerial) << '\n';
+    bool any = false;
+    for (const auto& tx : entries_) {
+        if (tx->atmSerial() != atmSerial) continue;
+        out << tx->describe(msg) << '\n';             // 거래 종류별 describe (polymorphism)
+        any = true;
     }
-    for (const auto& tx : entries_) out << tx->describe(msg) << '\n';   // 거래 종류별 describe (polymorphism)
+    if (!any) out << msg.get(MsgId::NO_TRANSACTIONS) << '\n';
 }
 
-bool TransactionLog::saveToFile(const std::string& path, const Messages& msg) const {
+bool TransactionLog::saveForAtm(const std::string& path, const Messages& msg, const std::string& atmSerial) const {
     std::ofstream file(path);
     if (!file) return false;
-    file << msg.get(MsgId::HISTORY_TITLE) << '\n';
-    print(file, msg);
+    printForAtm(file, msg, atmSerial);
     return static_cast<bool>(file);
 }

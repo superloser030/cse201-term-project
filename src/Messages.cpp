@@ -45,8 +45,7 @@ std::string EnglishMessages::get(MsgId id) const {
     case MsgId::DEPOSIT_TYPE:            return "1) Cash  2) Check";
     case MsgId::ENTER_BILLS:             return "Insert cash: enter the number of bills for each denomination.";
     case MsgId::BILL_COUNT:              return "  Number of {} KRW bills: ";
-    case MsgId::ENTER_CHECK_COUNT:       return "Number of checks: ";
-    case MsgId::ENTER_CHECK_AMOUNT:      return "  Amount of check #{}: ";
+    case MsgId::ENTER_CHECK_AMOUNT:      return "Insert one check. Check amount (KRW): ";
     case MsgId::ENTER_FEE_BILLS:         return "A fee of {} KRW is required. Insert the fee in cash separately.";
     case MsgId::ENTER_WITHDRAWAL_AMOUNT: return "Amount to withdraw (KRW): ";
     case MsgId::DISPENSED:               return "Dispensed bills: {}";
@@ -59,7 +58,7 @@ std::string EnglishMessages::get(MsgId id) const {
     case MsgId::BALANCE:                 return "Current balance: {} KRW";
     case MsgId::SESSION_SUMMARY:         return "===== Session Summary =====";
     case MsgId::SUMMARY_ACCOUNT:         return "Account: {}";
-    case MsgId::HISTORY_TITLE:           return "===== Transaction History (all ATMs, since system start) =====";
+    case MsgId::HISTORY_TITLE:           return "===== Transaction History: ATM {} (since system start) =====";
     case MsgId::NO_TRANSACTIONS:         return "No transactions.";
     case MsgId::HISTORY_SAVED:           return "Transaction history saved to file: {}";
 
@@ -71,7 +70,6 @@ std::string EnglishMessages::get(MsgId id) const {
     case MsgId::LBL_FROM:                return "From";
     case MsgId::LBL_TO:                  return "To";
     case MsgId::LBL_BILLS:               return "Bills";
-    case MsgId::LBL_CHECK_COUNT:         return "Checks";
     case MsgId::LBL_DEPOSIT_CASH:        return "Cash Deposit";
     case MsgId::LBL_DEPOSIT_CHECK:       return "Check Deposit";
     case MsgId::LBL_WITHDRAWAL:          return "Withdrawal";
@@ -85,7 +83,6 @@ std::string EnglishMessages::get(MsgId id) const {
     case MsgId::ERR_INSUFFICIENT_FUNDS:  return "Insufficient account balance. (Balance: {} KRW)";
     case MsgId::ERR_INSUFFICIENT_CASH:   return "This ATM does not have enough cash to dispense the amount.";
     case MsgId::ERR_TOO_MANY_BILLS:      return "Too many bills. Maximum {} bills per transaction.";
-    case MsgId::ERR_TOO_MANY_CHECKS:     return "Too many checks. Maximum {} check(s) per transaction.";
     case MsgId::ERR_WITHDRAWAL_LIMIT:    return "Exceeds the withdrawal limit of {} KRW per transaction.";
     case MsgId::ERR_WITHDRAWAL_COUNT:    return "Maximum of {} withdrawals per session reached.";
     case MsgId::ERR_INVALID_CHECK:       return "Invalid check. The minimum check amount is {} KRW.";
@@ -117,8 +114,7 @@ std::string KoreanMessages::get(MsgId id) const {
     case MsgId::DEPOSIT_TYPE:            return "1) 현금  2) 수표";
     case MsgId::ENTER_BILLS:             return "현금을 넣어 주세요: 권종별 장수를 입력하세요.";
     case MsgId::BILL_COUNT:              return "  {}원권 장수: ";
-    case MsgId::ENTER_CHECK_COUNT:       return "수표 장수: ";
-    case MsgId::ENTER_CHECK_AMOUNT:      return "  {}번째 수표 금액: ";
+    case MsgId::ENTER_CHECK_AMOUNT:      return "수표 1장을 넣어 주세요. 수표 금액(원): ";
     case MsgId::ENTER_FEE_BILLS:         return "수수료 {}원이 필요합니다. 수수료를 현금으로 따로 넣어 주세요.";
     case MsgId::ENTER_WITHDRAWAL_AMOUNT: return "출금할 금액(원): ";
     case MsgId::DISPENSED:               return "지급한 지폐: {}";
@@ -131,7 +127,7 @@ std::string KoreanMessages::get(MsgId id) const {
     case MsgId::BALANCE:                 return "현재 잔액: {}원";
     case MsgId::SESSION_SUMMARY:         return "===== 거래 요약 =====";
     case MsgId::SUMMARY_ACCOUNT:         return "계좌: {}";
-    case MsgId::HISTORY_TITLE:           return "===== 거래 내역 (전체 ATM, 시스템 시작 이후) =====";
+    case MsgId::HISTORY_TITLE:           return "===== 거래 내역: ATM {} (시스템 시작 이후) =====";
     case MsgId::NO_TRANSACTIONS:         return "거래 내역이 없습니다.";
     case MsgId::HISTORY_SAVED:           return "거래 내역을 파일로 저장했습니다: {}";
 
@@ -143,7 +139,6 @@ std::string KoreanMessages::get(MsgId id) const {
     case MsgId::LBL_FROM:                return "출금 계좌";
     case MsgId::LBL_TO:                  return "입금 계좌";
     case MsgId::LBL_BILLS:               return "지폐";
-    case MsgId::LBL_CHECK_COUNT:         return "수표";
     case MsgId::LBL_DEPOSIT_CASH:        return "현금 입금";
     case MsgId::LBL_DEPOSIT_CHECK:       return "수표 입금";
     case MsgId::LBL_WITHDRAWAL:          return "출금";
@@ -157,7 +152,6 @@ std::string KoreanMessages::get(MsgId id) const {
     case MsgId::ERR_INSUFFICIENT_FUNDS:  return "계좌 잔액이 부족합니다. (잔액: {}원)";
     case MsgId::ERR_INSUFFICIENT_CASH:   return "ATM에 지급할 현금이 부족합니다.";
     case MsgId::ERR_TOO_MANY_BILLS:      return "지폐가 너무 많습니다. 거래당 최대 {}장입니다.";
-    case MsgId::ERR_TOO_MANY_CHECKS:     return "수표가 너무 많습니다. 거래당 최대 {}장입니다.";
     case MsgId::ERR_WITHDRAWAL_LIMIT:    return "1회 출금 한도 {}원을 초과했습니다.";
     case MsgId::ERR_WITHDRAWAL_COUNT:    return "세션당 최대 출금 횟수({}회)를 초과했습니다.";
     case MsgId::ERR_INVALID_CHECK:       return "유효하지 않은 수표입니다. 최소 금액은 {}원입니다.";

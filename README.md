@@ -32,7 +32,7 @@ Run from the project root so the input file is found:
 build\atm.exe
 ```
 1. Enter the initial condition file name (just press Enter for `sample_initial_condition.txt`).
-2. Admin card numbers are printed at start: `ADMIN-<BankName>` (no password, usable at every ATM).
+2. Admin card numbers are printed at start: `ADMIN-<BankName>` (no password, usable only at ATMs whose primary bank issued it). The admin menu shows the transactions of that ATM only.
 3. Select an ATM → (bilingual ATM: choose language) → insert card (enter card number) → password.
 
 Special inputs:

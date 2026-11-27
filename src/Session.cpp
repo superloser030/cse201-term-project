@@ -15,7 +15,6 @@
 namespace {
 constexpr long long MAX_INPUT_AMOUNT = 1000000000000LL;   // 입력 범위 상한 (overflow 방지)
 constexpr long long MAX_INPUT_BILLS = 10000;              // 권종별 입력 상한
-constexpr long long MAX_INPUT_CHECKS = 100;               // 수표 장수 입력 상한
 }
 
 Session::Session(ATM& atm, System& system, UserCard& card, const Messages& msg)
@@ -65,17 +64,10 @@ void Session::handleDeposit() {
         const CashBundle feeBills = readFeeBills(fee);
         process(std::make_shared<CashDepositTransaction>(card_->number(), *atm_, account(), bills, feeBills));
     } else {
-        std::cout << msg_->get(MsgId::ENTER_CHECK_COUNT);
-        const long long count = io.readNumber(1, MAX_INPUT_CHECKS);
-        if (count > atm_->maxChecksPerTransaction())           // REQ4.2: 장수 초과는 바로 알림
-            throw LimitExceededException(MsgId::ERR_TOO_MANY_CHECKS, atm_->maxChecksPerTransaction());
-        std::vector<long long> checks;
-        for (long long i = 1; i <= count; ++i) {
-            std::cout << msg_->format(MsgId::ENTER_CHECK_AMOUNT, i);
-            checks.push_back(io.readNumber(1, MAX_INPUT_AMOUNT));
-        }
+        std::cout << msg_->get(MsgId::ENTER_CHECK_AMOUNT);    // 수표 1장 고정 (결정 14)
+        const long long checkAmount = io.readNumber(1, MAX_INPUT_AMOUNT);
         const CashBundle feeBills = readFeeBills(fee);
-        process(std::make_shared<CheckDepositTransaction>(card_->number(), *atm_, account(), checks, feeBills));
+        process(std::make_shared<CheckDepositTransaction>(card_->number(), *atm_, account(), checkAmount, feeBills));
     }
 }
 
@@ -128,7 +120,7 @@ void Session::process(const std::shared_ptr<Transaction>& tx) {
 }
 
 void Session::record(const std::shared_ptr<const Transaction>& tx) {
-    for (Account* acc : tx->affectedAccounts()) acc->addHistory(tx);   // 잔액이 바뀐 계좌 모두 (임시 결정 4)
+    for (Account* acc : tx->affectedAccounts()) acc->addHistory(tx);   // 잔액이 바뀐 계좌 모두 (추가 2)
     system_->log().add(tx);                                              // 시스템 전체 기록 (REQ7.2)
     txs_.push_back(tx);                                                  // 이번 session 기록 (REQ2.3)
 }

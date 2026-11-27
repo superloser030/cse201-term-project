@@ -1,6 +1,6 @@
 Initial condition file name (Enter = sample_initial_condition.txt): 
 Loaded 2 bank(s), 2 account(s), 2 ATM(s) from sample_initial_condition.txt
-Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+Admin cards (no password, usable at ATMs of the issuing bank):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
 
 ===== Select ATM =====
 1) 000111  Kakao  Single  Unilingual
@@ -18,21 +18,16 @@ Enter password: 1234
 Select: 1
 1) Cash  2) Check
 Select: 2
-Number of checks: 1
-  Amount of check #1: 100000
+Insert one check. Check amount (KRW): 100000
 Transaction completed. (Transaction ID: 1)
 Current balance: 104,000 KRW
 
 1) Deposit  2) Withdrawal  3) Transfer  4) End session
-Select: 1
-1) Cash  2) Check
-Select: 2
-Number of checks: 2
-[Error] Too many checks. Maximum 1 check(s) per transaction.
+Select: 4
 
 ===== Session Summary =====
 Account: Kakao 100-100-111111 (Chris)
-[TX 1] ATM 000111 | Card 1111-1111-1111 | Check Deposit (Checks 1) | Amount 100,000 KRW | Fee 0 KRW | To 100-100-111111
+[TX 1] ATM 000111 | Card 1111-1111-1111 | Check Deposit | Amount 100,000 KRW | Fee 0 KRW | To 100-100-111111
 Card returned. Thank you.
 
 ===== Select ATM =====

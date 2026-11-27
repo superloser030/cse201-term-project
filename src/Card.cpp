@@ -15,6 +15,6 @@ bool UserCard::canBeUsedAt(const ATM& atm) const {
 
 AdminCard::AdminCard(Bank& issuer) : Card("ADMIN-" + issuer.name(), issuer) {}
 
-bool AdminCard::canBeUsedAt(const ATM& /*atm*/) const {
-    return true;                               // 임시 결정 2: 모든 ATM에서 사용
+bool AdminCard::canBeUsedAt(const ATM& atm) const {
+    return atm.isPrimary(issuer());            // 결정 2: 발급 은행이 관리하는 ATM에서만
 }

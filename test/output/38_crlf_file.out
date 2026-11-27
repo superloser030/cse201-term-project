@@ -1,6 +1,6 @@
 Initial condition file name (Enter = sample_initial_condition.txt): test/data/crlf_condition.txt
 Loaded 2 bank(s), 2 account(s), 2 ATM(s) from test/data/crlf_condition.txt
-Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+Admin cards (no password, usable at ATMs of the issuing bank):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
 
 ===== Select ATM =====
 1) 000111  Kakao  Single  Unilingual

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-// 시스템 전체: 은행과 ATM을 소유, 파일 로드, snapshot, ATM 선택 루프, 전체 거래 기록
+// 시스템 전체: 은행과 ATM을 소유, 파일 로드, snapshot, ATM 선택 루프, 성공 거래 기록(관리자 출력은 ATM별)
 class System {
 public:
     System();                                              // io_를 snapshot handler와 함께 생성
@@ -19,7 +19,7 @@ public:
 
     void promptAndLoad();                                  // 파일 이름 입력(Enter = 기본), 열기 실패 시 다시 묻기 (결정 6)
     void load(const std::string& filename);                // 읽기 + 검사. 문제 있으면 FileFormatException (결정 7)
-    void printAdminCards(std::ostream& out) const;         // 시작 시 관리자 카드 안내 (임시 결정 3)
+    void printAdminCards(std::ostream& out) const;         // 시작 시 관리자 카드 안내 (추가 1)
 
     // ATM 선택 → atm.startSession() 반복
     // 마지막 방어선: 그 밖의 std::exception은 오류 출력 후 ATM 선택으로 복귀
@@ -35,7 +35,6 @@ public:
     const TransactionLog& log() const { return log_; }
 
     static constexpr const char* DEFAULT_FILE = "sample_initial_condition.txt";
-    static constexpr const char* HISTORY_FILE = "transaction_history.txt";
 
 private:
     ConsoleIO io_;

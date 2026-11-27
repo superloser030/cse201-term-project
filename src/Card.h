@@ -47,12 +47,12 @@ private:
     std::string password_;              // string: 앞자리 0 보존
 };
 
-// 관리자 카드: "ADMIN-<은행 이름>", 비밀번호 없음, 모든 ATM에서 사용 (결정 3·4, 임시 결정 2)
+// 관리자 카드: "ADMIN-<은행 이름>", 비밀번호 없음 (결정 3·4)
 class AdminCard : public Card {
 public:
     explicit AdminCard(Bank& issuer);
 
-    bool canBeUsedAt(const ATM& atm) const override;
+    bool canBeUsedAt(const ATM& atm) const override;      // atm.isPrimary(발급 은행): 주거래 은행 ATM만 (결정 2)
     bool isAdmin() const override { return true; }
 };
 

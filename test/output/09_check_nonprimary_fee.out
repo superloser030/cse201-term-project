@@ -1,6 +1,6 @@
 Initial condition file name (Enter = sample_initial_condition.txt): 
 Loaded 2 bank(s), 2 account(s), 2 ATM(s) from sample_initial_condition.txt
-Admin cards (no password):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
+Admin cards (no password, usable at ATMs of the issuing bank):  ADMIN-Kakao (Kakao)  ADMIN-IM (IM)
 
 ===== Select ATM =====
 1) 000111  Kakao  Single  Unilingual
@@ -20,8 +20,7 @@ Enter password: 1234
 Select: 1
 1) Cash  2) Check
 Select: 2
-Number of checks: 1
-  Amount of check #1: 100000
+Insert one check. Check amount (KRW): 100000
 A fee of 2,000 KRW is required. Insert the fee in cash separately.
   Number of 50,000 KRW bills: 0
   Number of 10,000 KRW bills: 0
@@ -35,7 +34,7 @@ Select: 4
 
 ===== Session Summary =====
 Account: Kakao 100-100-111111 (Chris)
-[TX 1] ATM 000222 | Card 1111-1111-1111 | Check Deposit (Checks 1) | Amount 100,000 KRW | Fee 2,000 KRW | To 100-100-111111
+[TX 1] ATM 000222 | Card 1111-1111-1111 | Check Deposit | Amount 100,000 KRW | Fee 2,000 KRW | To 100-100-111111
 Card returned. Thank you.
 
 ===== Select ATM =====

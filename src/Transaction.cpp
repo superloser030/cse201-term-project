@@ -6,7 +6,6 @@
 #include "FeePolicy.h"
 #include "Messages.h"
 
-#include <numeric>
 
 // ════════════════════════════════════════════════════════════════════════
 // Transaction (base)
@@ -44,11 +43,8 @@ DepositTransaction::DepositTransaction(const std::string& cardNumber, const ATM&
     : Transaction(cardNumber, atm, amount, requiredFee(atm, target)),
       target_(&target), feeBills_(feeBills) {}
 
-void DepositTransaction::validateFee(const ATM& atm, int otherBills) const {
-    // 결정 10: 입금 지폐 + 수수료 지폐 합쳐서 한도 이하
-    if (otherBills + feeBills_.totalBills() > atm.maxBillsPerTransaction())
-        throw LimitExceededException(MsgId::ERR_TOO_MANY_BILLS, atm.maxBillsPerTransaction());
-    // 결정 11: 수수료 현금이 정확히 일치해야 함
+void DepositTransaction::validateFee() const {
+    // 결정 11: 수수료 현금이 정확히 일치해야 함 (수수료 지폐는 50장 한도에 넣지 않음, 결정 10)
     if (feeBills_.totalAmount() != fee())
         throw FeeMismatchException(MsgId::ERR_FEE_MISMATCH, fee());
 }
@@ -61,7 +57,9 @@ CashDepositTransaction::CashDepositTransaction(const std::string& cardNumber, co
 
 void CashDepositTransaction::validate(const ATM& atm) const {
     if (bills_.empty()) throw InvalidInputException(MsgId::ERR_NO_CASH);
-    validateFee(atm, bills_.totalBills());
+    if (bills_.totalBills() > atm.maxBillsPerTransaction())          // 결정 10: 입금 지폐만 셈
+        throw LimitExceededException(MsgId::ERR_TOO_MANY_BILLS, atm.maxBillsPerTransaction());
+    validateFee();
 }
 
 void CashDepositTransaction::apply(ATM& atm) {
@@ -78,20 +76,14 @@ std::string CashDepositTransaction::describe(const Messages& msg) const {
 
 // ── 수표 입금 ───────────────────────────────────────────────────────────
 CheckDepositTransaction::CheckDepositTransaction(const std::string& cardNumber, const ATM& atm,
-                                                 Account& target, const std::vector<long long>& checks,
+                                                 Account& target, long long checkAmount,
                                                  const CashBundle& feeBills)
-    : DepositTransaction(cardNumber, atm, target, std::accumulate(checks.begin(), checks.end(), 0LL), feeBills),
-      checks_(checks) {}
+    : DepositTransaction(cardNumber, atm, target, checkAmount, feeBills) {}
 
-void CheckDepositTransaction::validate(const ATM& atm) const {
-    if (checks_.empty()) throw InvalidInputException(MsgId::ERR_INVALID_AMOUNT);
-    if (static_cast<int>(checks_.size()) > atm.maxChecksPerTransaction())
-        throw LimitExceededException(MsgId::ERR_TOO_MANY_CHECKS, atm.maxChecksPerTransaction());
-    for (long long check : checks_) {
-        if (check < FeePolicy::MIN_CHECK_AMOUNT)
-            throw InvalidInputException(MsgId::ERR_INVALID_CHECK, FeePolicy::MIN_CHECK_AMOUNT);
-    }
-    validateFee(atm, 0);
+void CheckDepositTransaction::validate(const ATM& /*atm*/) const {
+    if (amount() < FeePolicy::MIN_CHECK_AMOUNT)                       // REQ1.10
+        throw InvalidInputException(MsgId::ERR_INVALID_CHECK, FeePolicy::MIN_CHECK_AMOUNT);
+    validateFee();
 }
 
 void CheckDepositTransaction::apply(ATM& atm) {
@@ -100,8 +92,7 @@ void CheckDepositTransaction::apply(ATM& atm) {
 }
 
 std::string CheckDepositTransaction::describe(const Messages& msg) const {
-    return header(msg) + " | " + msg.get(MsgId::LBL_DEPOSIT_CHECK) + " (" + msg.get(MsgId::LBL_CHECK_COUNT) +
-           " " + std::to_string(checks_.size()) + ")" + moneyPart(msg) +
+    return header(msg) + " | " + msg.get(MsgId::LBL_DEPOSIT_CHECK) + moneyPart(msg) +
            " | " + msg.get(MsgId::LBL_TO) + " " + target().accountNumber();
 }
 

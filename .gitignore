@@ -13,4 +13,4 @@ build/
 *_transac_history.txt
 
 # Admin transaction history output (prototype)
-transaction_history.txt
+ATM_*_transaction_history.txt

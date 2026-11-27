@@ -75,10 +75,10 @@ void ATM::runAdminSession(System& system, const Messages& msg) {
     std::cout << msg.get(MsgId::ADMIN_MENU) << '\n' << msg.get(MsgId::SELECT_PROMPT);   // REQ7.1
     system.io().readNumber(1, 1);
 
-    std::cout << msg.get(MsgId::HISTORY_TITLE) << '\n';                    // REQ7.2
-    system.log().print(std::cout, msg);
-    if (system.log().saveToFile(System::HISTORY_FILE, msg))                // REQ7.3
-        std::cout << msg.format(MsgId::HISTORY_SAVED, std::string(System::HISTORY_FILE)) << '\n';
+    system.log().printForAtm(std::cout, msg, serial_);                     // REQ7.2: 이 ATM의 거래 (결정 1)
+    const std::string path = "ATM_" + serial_ + "_transaction_history.txt";
+    if (system.log().saveForAtm(path, msg, serial_))                       // REQ7.3
+        std::cout << msg.format(MsgId::HISTORY_SAVED, path) << '\n';
 }
 
 void ATM::runUserSession(System& system, UserCard& card, const Messages& msg) {

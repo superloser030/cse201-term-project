@@ -25,7 +25,7 @@ public:
     void execute(ATM& atm);
 
     virtual std::string describe(const Messages& msg) const = 0;   // 거래 종류별로 다른 정보 출력 (REQ7.2)
-    virtual std::vector<Account*> affectedAccounts() const = 0;    // 잔액이 바뀐 계좌 (임시 결정 4)
+    virtual std::vector<Account*> affectedAccounts() const = 0;    // 잔액이 바뀐 계좌 (추가 2)
 
     int id() const { return id_; }                                 // 모든 session 통틀어 고유 (REQ2.4)
     const std::string& atmSerial() const { return atmSerial_; }
@@ -61,7 +61,7 @@ public:
 protected:
     DepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
                        long long amount, const CashBundle& feeBills);
-    void validateFee(const ATM& atm, int otherBills) const;     // 지폐 한도(합산, 결정 10) + 수수료 일치(결정 11)
+    void validateFee() const;                                   // 수수료 현금 일치 (결정 11)
     Account& target() const { return *target_; }
     const CashBundle& feeBills() const { return feeBills_; }
 
@@ -70,7 +70,7 @@ private:
     CashBundle feeBills_;
 };
 
-// 현금 입금: ATM 현금 증가 (REQ4.5)
+// 현금 입금: 수수료를 뺀 입금 지폐만 50장 이하 (결정 10), ATM 현금 증가 (REQ4.5)
 class CashDepositTransaction : public DepositTransaction {
 public:
     CashDepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
@@ -83,17 +83,16 @@ private:
     CashBundle bills_;
 };
 
-// 수표 입금: 100,000원 이상 (REQ1.10), 장수 한도 (REQ4.2), ATM 현금 증가 없음 (REQ4.6, 수수료 지폐만 증가)
+// 수표 입금: 거래 1회에 수표 1장 고정 (결정 14), 100,000원 이상 (REQ1.10),
+//            ATM 현금 증가 없음 (REQ4.6, 수수료 지폐만 증가)
 class CheckDepositTransaction : public DepositTransaction {
 public:
     CheckDepositTransaction(const std::string& cardNumber, const ATM& atm, Account& target,
-                            const std::vector<long long>& checks, const CashBundle& feeBills);
+                            long long checkAmount, const CashBundle& feeBills);
     std::string describe(const Messages& msg) const override;
 protected:
     void validate(const ATM& atm) const override;
     void apply(ATM& atm) override;
-private:
-    std::vector<long long> checks_;
 };
 
 // ── 출금 (REQ5) ─────────────────────────────────────────────────────────

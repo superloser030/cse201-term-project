@@ -120,7 +120,7 @@ void System::load(const std::string& filename) {
 }
 
 void System::printAdminCards(std::ostream& out) const {
-    out << "Admin cards (no password):";
+    out << "Admin cards (no password, usable at ATMs of the issuing bank):";
     for (const auto& bank : banks_) {
         if (bank->adminCard() != nullptr) out << "  " << bank->adminCard()->number() << " (" << bank->name() << ")";
     }

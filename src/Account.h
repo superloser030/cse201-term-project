@@ -23,7 +23,7 @@ public:
     void deposit(long long amount);                     // 0 이하면 InvalidInputException
     void withdraw(long long amount);                    // 잔액 부족 시 InsufficientFundsException
 
-    // 이 계좌의 잔액을 바꾼 성공 거래 (임시 결정 4)
+    // 이 계좌의 잔액을 바꾼 성공 거래 (추가 2)
     void addHistory(std::shared_ptr<const Transaction> tx);
     const std::vector<std::shared_ptr<const Transaction>>& history() const { return history_; }
 

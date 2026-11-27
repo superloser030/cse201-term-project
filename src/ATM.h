@@ -32,11 +32,10 @@ public:
     bool isBilingual() const { return bilingual_; }
     virtual std::string typeName() const = 0;       // "Single" / "Multi"
 
-    // ── 한도: ATM이 허용하는 값 (REQ4.2 "the limit allowed by the ATM", 임시 결정 5·6) ──
+    // ── 한도: ATM이 허용하는 값 (REQ4.2 "the limit allowed by the ATM", 추가 3) ──
+    // 수표는 거래 1회 1장 고정 (결정 14)이라 한도 값을 두지 않음
     static constexpr int DEFAULT_MAX_BILLS = 50;    // 화면 요구사항: 한 번에 넣거나 내줄 수 있는 지폐 50장
-    static constexpr int DEFAULT_MAX_CHECKS = 1;    // 4번 설명의 예시 값
     int maxBillsPerTransaction() const { return maxBills_; }
-    int maxChecksPerTransaction() const { return maxChecks_; }
 
     // ── 현금: 용도별 함수로만 변경 (encapsulation) ────────────
     const CashBundle& cash() const { return cash_; }                           // 읽기 전용 (snapshot)
@@ -57,7 +56,6 @@ private:
     bool bilingual_;
     CashBundle cash_;
     int maxBills_ = DEFAULT_MAX_BILLS;
-    int maxChecks_ = DEFAULT_MAX_CHECKS;
 };
 
 class SingleBankATM : public ATM {
