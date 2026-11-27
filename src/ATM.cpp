@@ -10,8 +10,8 @@
 
 #include <iostream>
 
-ATM::ATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash)
-    : serial_(serial), primaryBank_(&primaryBank), bilingual_(bilingual), cash_(initialCash) {}
+ATM::ATM(const std::string& serial, Bank& primaryBank, bool bilingual)
+    : serial_(serial), primaryBank_(&primaryBank), bilingual_(bilingual) {}   // 현금 0으로 시작, 은행이 공급 (REQ1.4)
 
 // ── 현금 ────────────────────────────────────────────────────────────────
 void ATM::acceptCash(const CashBundle& bills) { cash_.add(bills); }
@@ -87,14 +87,12 @@ void ATM::runUserSession(System& system, UserCard& card, const Messages& msg) {
 }
 
 // ── Single / Multi ──────────────────────────────────────────────────────
-SingleBankATM::SingleBankATM(const std::string& serial, Bank& primaryBank, bool bilingual,
-                             const CashBundle& initialCash)
-    : ATM(serial, primaryBank, bilingual, initialCash) {}
+SingleBankATM::SingleBankATM(const std::string& serial, Bank& primaryBank, bool bilingual)
+    : ATM(serial, primaryBank, bilingual) {}
 
 bool SingleBankATM::acceptsBank(const Bank& bank) const { return isPrimary(bank); }
 
-MultiBankATM::MultiBankATM(const std::string& serial, Bank& primaryBank, bool bilingual,
-                           const CashBundle& initialCash)
-    : ATM(serial, primaryBank, bilingual, initialCash) {}
+MultiBankATM::MultiBankATM(const std::string& serial, Bank& primaryBank, bool bilingual)
+    : ATM(serial, primaryBank, bilingual) {}
 
 bool MultiBankATM::acceptsBank(const Bank& /*bank*/) const { return true; }

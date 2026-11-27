@@ -113,9 +113,11 @@ void System::load(const std::string& filename) {
             throw FileFormatException("Invalid ATM language for " + serial + ": " + language);
 
         const bool bilingual = (language == "bilingual");
-        const CashBundle cash(counts);
-        if (type == "single") atms_.push_back(std::make_unique<SingleBankATM>(serial, *bank, bilingual, cash));
-        else                  atms_.push_back(std::make_unique<MultiBankATM>(serial, *bank, bilingual, cash));
+        if (type == "single") atms_.push_back(std::make_unique<SingleBankATM>(serial, *bank, bilingual));
+        else                  atms_.push_back(std::make_unique<MultiBankATM>(serial, *bank, bilingual));
+
+        // REQ1.4: 주거래 은행이 ATM에 현금을 넣음 (파일의 초기 현금 = 은행이 공급한 현금, 결정 15)
+        bank->supplyCash(*atms_.back(), CashBundle(counts));
     }
 }
 

@@ -44,7 +44,7 @@ public:
     void dispenseCash(const CashBundle& bills);                               // 실제 배출 (REQ5.5)
 
 protected:
-    ATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash);
+    ATM(const std::string& serial, Bank& primaryBank, bool bilingual);
 
 private:
     void runAdminSession(System& system, const Messages& msg);                 // REQ7: 거래 내역 메뉴만
@@ -60,14 +60,14 @@ private:
 
 class SingleBankATM : public ATM {
 public:
-    SingleBankATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash);
+    SingleBankATM(const std::string& serial, Bank& primaryBank, bool bilingual);
     bool acceptsBank(const Bank& bank) const override;   // 주거래 은행만
     std::string typeName() const override { return "Single"; }
 };
 
 class MultiBankATM : public ATM {
 public:
-    MultiBankATM(const std::string& serial, Bank& primaryBank, bool bilingual, const CashBundle& initialCash);
+    MultiBankATM(const std::string& serial, Bank& primaryBank, bool bilingual);
     bool acceptsBank(const Bank& bank) const override;   // 모든 은행
     std::string typeName() const override { return "Multi"; }
 };

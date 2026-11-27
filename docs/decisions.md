@@ -131,6 +131,14 @@ spec(CSE201 Term Project v1)에 명시되지 않았거나 해석이 갈리는 �
 
 ---
 
+## 15. ATM 현금 공급 (REQ1.4)
+- **결정**: 입력 파일의 ATM 초기 현금(Initial Fund)은 **그 ATM의 주거래 은행이 공급한 현금**으로 본다.
+  ATM은 현금 0으로 만들어지고, 파일을 읽을 때 주거래 은행이 `Bank::supplyCash()`로 현금을 넣는다.
+  다른 은행은 그 ATM에 현금을 넣을 수 없다. 실행 중 추가 보충 기능은 없다(spec에 보충 시점·방법 언급 없음).
+- **spec**: REQ1.4 "A Bank deposits a certain amount of cashes to an ATM to serve users" /
+  시스템 설명 "Each ATM is managed by a primary bank" / REQ1.11 ATM 정보의 Initial Fund
+- **근거 종류**: spec 애매(공급 시점 미정) + 설계 결정
+
 ## 확인 필요 (구현 시)
 - **한국어 출력 인코딩**: Windows console 기본 인코딩(CP949)과 소스의 UTF-8(`/utf-8`)이 달라 한글이 깨질 수 있음(확인 안 됨).
   후보 해결책: 시작 시 `SetConsoleOutputCP(65001)` 또는 실행 전 `chcp 65001`. demo 노트북에서 실제로 확인할 것.

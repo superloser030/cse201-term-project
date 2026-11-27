@@ -1,6 +1,8 @@
 #include "Bank.h"
+#include "ATM.h"
 #include "TextUtil.h"
 
+#include <stdexcept>
 #include <utility>
 
 Bank::Bank(const std::string& name) : name_(name) {}
@@ -27,6 +29,12 @@ AdminCard& Bank::issueAdminCard() {
     cards_[ref.key()] = std::move(card);
     adminCard_ = &ref;
     return ref;
+}
+
+void Bank::supplyCash(ATM& atm, const CashBundle& cash) const {
+    if (!atm.isPrimary(*this))
+        throw std::logic_error("Bank " + name_ + " cannot supply cash to ATM " + atm.serial());
+    atm.acceptCash(cash);
 }
 
 Card* Bank::findCard(const std::string& cardNumber) const {
