@@ -1,3 +1,0 @@
-Initial condition file name (Enter = sample_initial_condition.txt): test/data/dup_card.txt
-[Error] Invalid initial condition file: Duplicate card number: 111111111111
-Program terminated.

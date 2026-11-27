@@ -15,3 +15,6 @@ build/
 # Admin transaction history output (prototype)
 ATM_*_transaction_history.txt
 transaction_history.txt
+
+# Auto test results (regenerated on every run)
+test/auto/*/output.txt

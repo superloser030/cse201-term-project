@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
-# 자동 테스트: test/cases/<name>.in 을 표준 입력으로 실행하고
-# test/cases/<name>.expect 의 각 줄이 출력에 있는지 확인한다.
-#   - 일반 줄: 출력에 반드시 있어야 함
-#   - '!'로 시작하는 줄: 출력에 없어야 함
-# 실행: 프로젝트 최상위에서  bash test/run_tests.sh
+# Automated tests (Git Bash). Same as test.cmd.
+#   test/auto/<name>/input.txt  : standard input
+#   test/auto/<name>/expect.txt : lines that must appear ('!' = must NOT appear)
+#   test/auto/<name>/output.txt : output of this run
+# Usage: bash test/run_tests.sh [name-filter]
 cd "$(dirname "$0")/.." || exit 1
 
 EXE=./build/atm.exe
 [ -x "$EXE" ] || EXE=./build/atm
-mkdir -p test/output
+[ -x "$EXE" ] || { echo "build/atm.exe not found. Run build.cmd first."; exit 1; }
+FILTER="$1"
 
 pass=0
 fail=0
-for input in test/cases/*.in; do
-    name=$(basename "$input" .in)
-    output="test/output/$name.out"
+for dir in test/auto/*/; do
+    name=$(basename "$dir")
+    [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]] && continue
+    output="$dir/output.txt"
     rm -f ATM_*_transaction_history.txt
-    "$EXE" < "$input" > "$output" 2>&1
+    "$EXE" < "$dir/input.txt" > "$output" 2>&1
     ok=1
     while IFS= read -r line || [ -n "$line" ]; do
         line=${line%$'\r'}
@@ -32,7 +34,7 @@ for input in test/cases/*.in; do
                 ok=0
             fi
         fi
-    done < "test/cases/$name.expect"
+    done < "$dir/expect.txt"
     if [ "$ok" = 1 ]; then
         echo "PASS $name"
         pass=$((pass + 1))

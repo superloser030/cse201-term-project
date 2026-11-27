@@ -1,3 +1,0 @@
-Initial condition file name (Enter = sample_initial_condition.txt): test/data/bad_type.txt
-[Error] Invalid initial condition file: Invalid ATM type for 000111: double
-Program terminated.

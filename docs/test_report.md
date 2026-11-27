@@ -2,10 +2,11 @@
 
 - branch: `prototype`
 - build: MSVC (VS 2022 Build Tools) `/std:c++17 /EHsc /W4 /permissive- /utf-8` → **오류 0, warning 0**
-- 자동 테스트: `bash test/run_tests.sh` → **47개 중 47개 통과** (2026-11-28, 조교 답변 반영 후)
+- 자동 테스트: `test.cmd` 또는 `bash test/run_tests.sh` → **47개 중 47개 통과** (2026-11-28, 조교 답변 반영 후)
 - 메모리 검사: `/fsanitize=address`(AddressSanitizer)로 build해 전체 입력 실행 → **ASan 오류 보고 0건**
   (파일 오류 테스트 33~37은 의도대로 종료 코드 1). 조교 답변 반영 후 47개로 다시 실행해도 0건
-- 실행 기록: `test/output/<case>.out`
+- 실행 기록: `test/auto/<case>/output.txt` (테스트 실행 시 생성)
+- 수동 테스트 시나리오: `test/manual/manual_test_guide.md`
 
 ## 테스트 목록과 대응 요구사항
 초기 조건: 별도 표시가 없으면 `sample_initial_condition.txt`, `rich`는 `test/data/rich_condition.txt`
